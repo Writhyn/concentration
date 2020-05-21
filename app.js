@@ -23,13 +23,14 @@ const createGrid = () => {
         card.setAttribute('src', 'images/card-back.png');
         card.setAttribute('id', i)
         card.addEventListener('click', flipCard);
+        card.addEventListener('click', burn);
         cardCont.appendChild(card);
         grid.appendChild(cardCont);
     })
 }
 
 const checkMatch = () => {
-    const visibleCards = document.querySelectorAll('img');
+    const visibleCards = document.querySelectorAll('.card');
     if (chosenCards[0].card === chosenCards[1].card) {
         visibleCards[chosenCards[0].id].setAttribute('class', 'matched');
         visibleCards[chosenCards[1].id].setAttribute('class', 'matched');
@@ -40,8 +41,8 @@ const checkMatch = () => {
     chosenCards = [];
 }
 
-const burningCards = [];
-document.addEventListener('click', burn);
+let burningCards = [];
+// document.addEventListener('click', burn);
 
 function burn() {
     const num = Math.floor(Math.random() * cardsInPlay.length);
@@ -49,7 +50,7 @@ function burn() {
     const flame = document.createElement('img');
     flame.setAttribute('src', 'images/fire.png');
     flame.setAttribute('class', 'fire');
-    burningCard.insertAdjacentElement('beforebegin', flame);
+    burningCard.insertAdjacentElement('afterend', flame);
     burningCards.push(burningCard.id);
 }
 
@@ -63,6 +64,8 @@ function flipCard() {
     if (chosenCards.length === 2) {
         setTimeout(checkMatch, 800);
     }
+    console.log(chosenCards);
+    
 }
 
 createGrid();
