@@ -28,9 +28,9 @@ html, body {
 
 .fire {
     position: absolute;
-    width: 11vw;
+    width: 10vw;
     height: auto;
-    margin: 0 0 2vh 2.5vw;
+    /* margin: 0 0 2vh 2.5vw; */
 }
 
 .fire img {
