@@ -54,6 +54,10 @@ const cardList = [
     {
         name: 'wigwam',
         img: 'images/wigwam.png'
+    },
+    {
+        name: 'hydrant',
+        img: 'images/hydrant.png'
     }
 ]
 
