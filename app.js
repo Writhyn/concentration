@@ -33,16 +33,21 @@ const createGrid = () => {
     })
 }
 
-let bucketsOfWater = 5;
+let bucketsOfWater = 500;
 const displayBuckets = () => {
     if (burningCards.length > 0) {
         document.querySelector('#buckets').innerText = `...And you have ${bucketsOfWater} buckets of water.`;
     }
 }
+
+let matchedIds = [];
 const checkMatch = () => {
     if (chosenCards[0].name === chosenCards[1].name) {
         chosenCards[0].classList.remove('visible');
         chosenCards[1].classList.remove('visible');
+        matchedIds.push(Number(chosenCards[0].id));
+        matchedIds.push(Number(chosenCards[1].id));
+        console.log('matchedIds: ', matchedIds);
         if (chosenCards[0].name === 'hydrant') {
             bucketsOfWater += 4;
             displayBuckets();
@@ -58,6 +63,7 @@ const checkMatch = () => {
 }
 
 let burningCards = [];
+
 const filteredCards = (targId) => {
     return burningCards.filter(el => {
         return el !== targId;
@@ -66,39 +72,44 @@ const filteredCards = (targId) => {
 const putOutFire = (event) => {
     if (bucketsOfWater > 0) {
         const targId = Number(event.target.id);
-        event.target.style.display = 'none';
+        console.log('targId:', targId);
+        
+        event.target.parentNode.removeChild(event.target);
+        console.log('before filter: ', burningCards);
         burningCards = filteredCards(targId);
-        bucketsOfWater--;
+        --bucketsOfWater;
         displayBuckets();
         oddsOfFire = 0;
     }
+    console.log('after filter: ', burningCards);
+    
 }
 
-const getUnburntCard = () => {
+const getUnburntCard = (event) => {
     const num = Math.floor(Math.random() * (cardsInPlay.length));
-    if (!burningCards.includes(num) && document.querySelectorAll('.visible')[num]) {
+    if (!burningCards.includes(num) && !matchedIds.includes(num) && Number(event.target.id) !== num) {
+        console.log('id:', Number(event.target.id));
         return num;
     }
     return getUnburntCard();
 }
 let oddsOfFire = 0;
-function burn() {
-    if (Math.floor((Math.random() * 10) + 1) < oddsOfFire) {
+function burn(event) {
+    // if (Math.floor((Math.random() * 10) + 1) < oddsOfFire) {
         document.querySelector('#but').classList.remove('invisible');
         setTimeout(() => {
             displayBuckets();
-        }, 1000)
-        const num = getUnburntCard();
+        }, 1000);
+        const num = getUnburntCard(event);
         const burningCard = document.querySelectorAll('.visible')[num];
+        console.log("burningCard", burningCard);
+        console.log("attempted num", num);
         const flame = document.createElement('img');
         flame.setAttribute('src', 'images/fire.png');
         flame.setAttribute('class', 'fire');
-        flame.setAttribute('id', num)
+        flame.setAttribute('id', num);
         flame.addEventListener('click', putOutFire);
-        console.log(burningCard);
-        console.log(num);
-        console.log(Boolean(document.querySelectorAll('.visible')[num]));
-        burningCard.insertAdjacentElement('beforebegin', flame);
+        burningCard.parentNode.append(flame);
         burningCards.push(Number(burningCard.id));
         oddsOfFire -= 2;
         
@@ -106,9 +117,9 @@ function burn() {
             document.querySelector('#app').innerHTML = '';
             document.querySelector('#but').innerHTML += '<br><br><br><br><br><br><h2>...And that killed you</h2>';
         }
-    } else {
-        oddsOfFire++;
-    }
+    // } else {
+    //     oddsOfFire++;
+    // }
 }
 
 function flipCard() {
