@@ -1,5 +1,7 @@
 import cardList from './components/cardList.js';
 
+// figure out why buckets updating is intermittent
+
 let cardsInPlay = [];
 cardList.map(el => {
     cardsInPlay.push(el);
@@ -63,6 +65,8 @@ const checkMatch = () => {
     } else {
         chosenCards[0].setAttribute('src', 'images/card-back.png');
         chosenCards[1].setAttribute('src', 'images/card-back.png');
+        chosenCards[0].classList.remove('selected');
+        chosenCards[1].classList.remove('selected');
     }
     chosenCards = [];
     if (matchedIds.length === 30) {
@@ -133,6 +137,7 @@ function flipCard() {
         return;
     }
     if (this.getAttribute('src') === 'images/card-back.png' && !burningCards.includes(Number(this.id))) {
+        this.classList.add('selected');
         this.setAttribute('src', this.dataset.img);
         chosenCards.push(this);
         if (chosenCards.length === 2) {

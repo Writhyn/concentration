@@ -22,19 +22,24 @@ h2 {
   line-height: 1vh;
 }
 
+#appCont {
+  max-width: 500px;
+  max-height: 600px;
+  margin: auto;
+}
+
 #app {
   position: relative;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  row-gap: 2vh;
-  column-gap: 3vw;
-  top: 3vh;
+  gap: 15px;
+  top: 1.5vh;
 }
 
 #buckets {
   position: relative;
   text-align: center;
-  top: 4vh;
+  top: 2vh;
 }
 
 .flex {
@@ -46,10 +51,16 @@ h2 {
 .card {
     height: auto;
     width: 10vw;
+    max-width: 75px;
     border: 2px solid black;
     border-radius: 10px;
     padding: 5px;
     visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.selected {
+  transform: scale(1.1);
 }
 
 .visible {
@@ -63,12 +74,9 @@ h2 {
 .fire {
     position: absolute;
     width: 10vw;
+    max-width: 75px;
     height: auto;
-}
-
-.fire img {
-    
-    /* animation: pulsate-bck 1s ease-in-out infinite both; */
+    animation: pulsate-bck 1s ease-in-out infinite both;
 }
 
 /* ----------------------------------------------
