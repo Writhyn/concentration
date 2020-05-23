@@ -48,7 +48,13 @@ const checkMatch = () => {
         matchedIds.push(Number(chosenCards[0].id));
         matchedIds.push(Number(chosenCards[1].id));
         if (chosenCards[0].name === 'hydrant') {
-            bucketsOfWater += 4;
+            Array.prototype.map.call(document.querySelectorAll('img'), el => {
+                if (el.src.includes('fire')) {
+                    el.parentNode.removeChild(el);
+                }
+            });
+            burningCards = [];
+            bucketsOfWater += 3;
             displayBuckets();
         } else {
             bucketsOfWater++;
@@ -59,6 +65,10 @@ const checkMatch = () => {
         chosenCards[1].setAttribute('src', 'images/card-back.png');
     }
     chosenCards = [];
+    if (matchedIds.length === 30) {
+        document.querySelector('#app').innerHTML = '';
+        document.querySelector('#but').innerHTML += '<br><br><br><br><br><br><h2>...But you won! Congratulations!</h2>'
+    }
 }
 
 let burningCards = [];
@@ -92,7 +102,7 @@ const getUnburntCard = (event) => {
 }
 let oddsOfFire = 0;
 function burn(event) {
-    if (Math.floor((Math.random() * 10) + 1) < oddsOfFire && matchedIds.length < (cardsInPlay.length / 2) - 2) {
+    if (Math.floor((Math.random() * 10) + 1) < oddsOfFire && matchedIds.length < (cardsInPlay.length) - 3) {
         document.querySelector('#but').classList.remove('invisible');
         setTimeout(() => {
             displayBuckets();
@@ -117,13 +127,20 @@ function burn(event) {
     }
 }
 
+let lockBoard = false;
 function flipCard() {
-    
+    if (lockBoard === true) {
+        return;
+    }
     if (this.getAttribute('src') === 'images/card-back.png' && !burningCards.includes(Number(this.id))) {
         this.setAttribute('src', this.dataset.img);
         chosenCards.push(this);
         if (chosenCards.length === 2) {
-            setTimeout(checkMatch, 300);
+            lockBoard = true;
+            setTimeout(() => {
+                lockBoard = false;
+                checkMatch();
+            }, 800);
         }
     }
     
