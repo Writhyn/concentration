@@ -33,7 +33,7 @@ const createGrid = () => {
     })
 }
 
-let bucketsOfWater = 500;
+let bucketsOfWater = 0;
 const displayBuckets = () => {
     if (burningCards.length > 0) {
         document.querySelector('#buckets').innerText = `...And you have ${bucketsOfWater} buckets of water.`;
@@ -47,7 +47,6 @@ const checkMatch = () => {
         chosenCards[1].classList.remove('visible');
         matchedIds.push(Number(chosenCards[0].id));
         matchedIds.push(Number(chosenCards[1].id));
-        console.log('matchedIds: ', matchedIds);
         if (chosenCards[0].name === 'hydrant') {
             bucketsOfWater += 4;
             displayBuckets();
@@ -71,39 +70,35 @@ const filteredCards = (targId) => {
 }
 const putOutFire = (event) => {
     if (bucketsOfWater > 0) {
-        const targId = Number(event.target.id);
-        console.log('targId:', targId);
-        
+        const targId = Number(event.target.id);        
         event.target.parentNode.removeChild(event.target);
-        console.log('before filter: ', burningCards);
         burningCards = filteredCards(targId);
         --bucketsOfWater;
         displayBuckets();
         oddsOfFire = 0;
-    }
-    console.log('after filter: ', burningCards);
-    
+    }    
 }
 
 const getUnburntCard = (event) => {
     const num = Math.floor(Math.random() * (cardsInPlay.length));
-    if (!burningCards.includes(num) && !matchedIds.includes(num) && Number(event.target.id) !== num) {
-        console.log('id:', Number(event.target.id));
-        return num;
+    const cardList = document.querySelectorAll('.card');
+    if (burningCards.includes(num)
+        || matchedIds.includes(num)
+        || Number(event.target.id) === num
+        || !cardList[num].src.includes('images/card-back.png')) {
+        return getUnburntCard(event);
     }
-    return getUnburntCard();
+    return num;
 }
 let oddsOfFire = 0;
 function burn(event) {
-    // if (Math.floor((Math.random() * 10) + 1) < oddsOfFire) {
+    if (Math.floor((Math.random() * 10) + 1) < oddsOfFire && matchedIds.length < (cardsInPlay.length / 2) - 2) {
         document.querySelector('#but').classList.remove('invisible');
         setTimeout(() => {
             displayBuckets();
         }, 1000);
         const num = getUnburntCard(event);
-        const burningCard = document.querySelectorAll('.visible')[num];
-        console.log("burningCard", burningCard);
-        console.log("attempted num", num);
+        const burningCard = document.querySelectorAll('.card')[num];
         const flame = document.createElement('img');
         flame.setAttribute('src', 'images/fire.png');
         flame.setAttribute('class', 'fire');
@@ -117,12 +112,13 @@ function burn(event) {
             document.querySelector('#app').innerHTML = '';
             document.querySelector('#but').innerHTML += '<br><br><br><br><br><br><h2>...And that killed you</h2>';
         }
-    // } else {
-    //     oddsOfFire++;
-    // }
+    } else {
+        oddsOfFire++;
+    }
 }
 
 function flipCard() {
+    
     if (this.getAttribute('src') === 'images/card-back.png' && !burningCards.includes(Number(this.id))) {
         this.setAttribute('src', this.dataset.img);
         chosenCards.push(this);
