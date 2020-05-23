@@ -36,7 +36,7 @@ const createGrid = () => {
 let bucketsOfWater = 0;
 const displayBuckets = () => {
     if (burningCards.length > 0) {
-        document.querySelector('#buckets').innerText = `...And you have ${bucketsOfWater} buckets of water.`;
+        document.querySelector('#buckets').innerText = `...And you have ${bucketsOfWater} ${bucketsOfWater === 1 ? 'bucket' : 'buckets'} of water.`;
     }
 }
 
@@ -140,7 +140,7 @@ function flipCard() {
             setTimeout(() => {
                 lockBoard = false;
                 checkMatch();
-            }, 800);
+            }, 500);
         }
     }
     

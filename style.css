@@ -23,16 +23,11 @@ h2 {
 }
 
 #app {
-  width: 50%;
   position: relative;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   row-gap: 2vh;
   column-gap: 3vw;
-  /* display: flex;
-  flex-flow: wrap;
-  justify-content: center;
-  align-items: center; */
   top: 3vh;
 }
 
