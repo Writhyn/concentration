@@ -24,9 +24,11 @@ const createGrid = () => {
         card.setAttribute('src', 'images/card-back.png');
         card.setAttribute('id', i);
         card.setAttribute('data-img', el.img);
+        // if (card.dataset.img.includes('hydrant')) {
+        //     card.setAttribute('style', 'border: 2px solid red;');
+        // }
         card.setAttribute('name', el.name);
         card.addEventListener('click', flipCard);
-        card.addEventListener('click', burn);
         cardCont.appendChild(card);
         grid.appendChild(cardCont);
     })
@@ -34,7 +36,7 @@ const createGrid = () => {
 
 let lockBoard = false;
 
-let bucketsOfWater = 5;
+let bucketsOfWater = 0;
 const displayBuckets = (num) => {
     bucketsOfWater += num;
     if (burningCards.length > 0) {
@@ -44,18 +46,47 @@ const displayBuckets = (num) => {
 }
 
 const waterNotification = (num, e) => {
-    const targ = e.target;
-    const note = document.createElement('div');
-    const text = document.createElement('p');
-    text.innerHTML = `${num}<br>Water!`;
-    note.append(text);
-    note.setAttribute('class', targ.src.indexOf('fire') > -1 ? 'water-red' : 'water-blue');
-    targ.parentNode.append(note);
-    note.classList.add('water-notification');
+    if (!document.querySelector('#but').classList.contains('invisible')) {
+        const targ = e.target;
+        const note = document.createElement('div');
+        const text = document.createElement('p');
+        text.innerHTML = `${num}<br>Water!`;
+        note.append(text);
+        note.setAttribute('class', targ.src.indexOf('fire') > -1 ? 'water-red' : 'water-blue');
+        targ.parentNode.append(note);
+        note.classList.add('water-notification');
+        setTimeout(() => {
+            note.parentNode.removeChild(note);
+        }, 1000);
+    }
     displayBuckets(Number(num));
+}
+
+const gameEnd = (win, blobOrigin) => {
+    const blob = document.createElement('div');
+    blob.setAttribute('id', 'endBlob');
+    blob.style.backgroundColor = win ? 'cornflowerblue' : 'tomato';
+    blobOrigin.parentNode.append(blob);
     setTimeout(() => {
-        note.parentNode.removeChild(note);
-    }, 1000);
+        blob.setAttribute('class', 'end-anim');
+    }, 50)
+    setTimeout(() => {
+        document.querySelector('#endContainer').classList.remove('display-none');
+        document.querySelector('#end').classList.add('fade-in');
+        document.querySelector('#end').innerHTML += win
+            ? 'You won! Congratulations!'
+            : '...You died by fire';
+        setTimeout(() => {
+            const button = document.querySelector('.tryAgain');
+            button.style.color = win ? 'cornflowerblue' : 'tomato';
+            button.classList.remove('invisible');
+            button.classList.add('fade-in');
+            button.addEventListener('click', () => {
+                location.reload();
+            })
+        }, 1200)
+    }, 1000)
+    
 }
 
 let matchedIds = [];
@@ -64,16 +95,16 @@ const checkMatch = (e) => {
         chosenCards.map(el => el.classList.remove('visible'));
         chosenCards.map(el => el.classList.add('swirl-out-bck'));
         chosenCards.map(el => matchedIds.push(Number(el.id)));
+        oddsOfFire -= 1;
+        waterNotification('+1', e);
         if (chosenCards[0].name === 'hydrant') {
-            waterNotification('+3', e);
             Array.prototype.map.call(document.querySelectorAll('img'), el => {
                 if (el.src.includes('fire')) {
                     el.parentNode.removeChild(el);
                 }
             });
             burningCards = [];
-        } else {
-            waterNotification('+1', e);
+            oddsOfFire = 0;
         }
     } else {
         chosenCards.map(el => el.setAttribute('src', 'images/card-back.png'));
@@ -81,10 +112,7 @@ const checkMatch = (e) => {
     }
     chosenCards = [];
     if (matchedIds.length === 30) {
-        document.querySelector('#app').innerHTML = '';
-        document.querySelector('#end').classList.add('fade-in');
-        document.querySelector('#buckets').classList.add('invisible');
-        document.querySelector('#end').innerHTML += '<br>...But you won! Congratulations!';
+        gameEnd(true, e.target);
     }
 }
 
@@ -118,7 +146,7 @@ const getUnburntCard = (event) => {
     return num;
 }
 
-let oddsOfFire = 0;
+let oddsOfFire = -2;
 function burn(event) {
     if (Math.floor((Math.random() * 10) + 1) < oddsOfFire && matchedIds.length < (cardsInPlay.length) - 3) {
         document.querySelector('#but').classList.remove('invisible');
@@ -131,15 +159,18 @@ function burn(event) {
         flame.setAttribute('id', num);
         flame.addEventListener('click', putOutFire);
         burningCard.parentNode.append(flame);
+        flame.classList.add('puff-in-center');
+        setTimeout(() => {
+            flame.classList.remove('puff-in-center');
+        }, 700)
         burningCards.push(Number(burningCard.id));
         oddsOfFire -= 2;
         if (burningCards.length > document.querySelectorAll('.visible').length / 2) {
-            document.querySelector('#app').innerHTML = '';
-            document.querySelector('#end').classList.add('fade-in');
-            document.querySelector('#end').innerHTML += '<br>...And that killed you';
+            gameEnd(false, burningCard);
         }
     } else {
         oddsOfFire++;
+    
     }
 }
 
@@ -152,6 +183,7 @@ function flipCard(e) {
         this.classList.add('selected');
         this.setAttribute('src', this.dataset.img);
         chosenCards.push(this);
+        burn(e);
         if (chosenCards.length === 2) {
             lockBoard = true;
             setTimeout(() => {
