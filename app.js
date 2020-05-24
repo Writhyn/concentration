@@ -1,6 +1,8 @@
 import cardList from './components/cardList.js';
 
 // figure out why buckets updating is intermittent
+// Update: the emptying of burning cards array in the hydrant condition is causing it
+
 
 let cardsInPlay = [];
 cardList.map(el => {
@@ -61,7 +63,6 @@ const waterNotification = (num, e) => {
     note.classList.add('water-notification');
     setTimeout(() => {
         note.parentNode.removeChild(note);
-        console.log(Number(num));
         displayBuckets(Number(num));
     }, 1000);
 }
@@ -106,10 +107,6 @@ const filteredCards = (targId) => {
         return el !== targId;
     });
 }
-
-// if (lockBoard === true) {
-//     return;
-// } THIS
 
 const putOutFire = (event) => {
     if (bucketsOfWater > 0) {
