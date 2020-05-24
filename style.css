@@ -42,6 +42,32 @@ h2 {
   top: 2vh;
 }
 
+.water-notification {
+  animation: fade-in-bck 0.6s cubic-bezier(0.390, 0.575, 0.565, 1.000) 0.3s both;
+  position: absolute;
+  margin: auto;
+  text-align: center;
+  font-size: 3vh;
+  z-index: 10;
+}
+
+.water-red {
+  color: red;
+  font-weight: bold;
+}
+
+.water-blue {
+  color: rgb(32, 78, 204);
+}
+
+.faded {
+  opacity: 20%;
+}
+
+.fade-in {
+  animation: focus-in-expand-fwd 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.8s both;
+}
+
 .flex {
   display: flex;
   justify-content: center;
@@ -103,3 +129,26 @@ h2 {
     }
   }
   
+  @keyframes fade-in-bck {
+    0% {
+      transform: translateZ(80px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateZ(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes focus-in-expand-fwd {
+    0% {
+      letter-spacing: -0.5em;
+      transform: translateZ(-800px);
+      filter: blur(12px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateZ(0);
+      filter: blur(0);
+      opacity: 1;
+    }

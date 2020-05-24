@@ -14,7 +14,6 @@ cardsInPlay = cardsInPlay
 
 let chosenCards = [];
 
-
 const grid = document.querySelector('#app');
 
 const createGrid = () => {
@@ -35,32 +34,56 @@ const createGrid = () => {
     })
 }
 
-let bucketsOfWater = 0;
-const displayBuckets = () => {
+let lockBoard = false;
+
+let bucketsOfWater = 5;
+const displayBuckets = (num) => {
+    bucketsOfWater += num;
     if (burningCards.length > 0) {
+        document.querySelector('#buckets').classList.add('fade-in');
         document.querySelector('#buckets').innerText = `...And you have ${bucketsOfWater} ${bucketsOfWater === 1 ? 'bucket' : 'buckets'} of water.`;
     }
 }
 
+const waterNotification = (num, e) => {
+    const targ = e.target;
+    const note = document.createElement('h1');
+    note.innerHTML = `${num}<br>Water!`;
+    note.setAttribute('class', targ.src.indexOf('fire') > -1 ? 'water-red' : 'water-blue');
+    if (targ.src.indexOf('fire') > -1) {
+        const img = targ.parentNode.childNodes[0];
+        img.classList.add('faded');
+        setTimeout(() => {
+            img.classList.remove('faded');
+        }, 1000)
+    }
+    targ.parentNode.append(note);
+    note.classList.add('water-notification');
+    setTimeout(() => {
+        note.parentNode.removeChild(note);
+        console.log(Number(num));
+        displayBuckets(Number(num));
+    }, 1000);
+}
+
 let matchedIds = [];
-const checkMatch = () => {
+const checkMatch = (e) => {
     if (chosenCards[0].name === chosenCards[1].name) {
         chosenCards[0].classList.remove('visible');
         chosenCards[1].classList.remove('visible');
         matchedIds.push(Number(chosenCards[0].id));
         matchedIds.push(Number(chosenCards[1].id));
         if (chosenCards[0].name === 'hydrant') {
+            console.log('hydrant');
+            waterNotification('+3', e);
             Array.prototype.map.call(document.querySelectorAll('img'), el => {
                 if (el.src.includes('fire')) {
                     el.parentNode.removeChild(el);
                 }
             });
             burningCards = [];
-            bucketsOfWater += 3;
-            displayBuckets();
         } else {
-            bucketsOfWater++;
-            displayBuckets();
+            waterNotification('+1', e);
         }
     } else {
         chosenCards[0].setAttribute('src', 'images/card-back.png');
@@ -71,7 +94,8 @@ const checkMatch = () => {
     chosenCards = [];
     if (matchedIds.length === 30) {
         document.querySelector('#app').innerHTML = '';
-        document.querySelector('#but').innerHTML += '<br><br><br><br><br><br><h2>...But you won! Congratulations!</h2>'
+        document.querySelector('#end').classList.add('fade-in');
+        document.querySelector('#end').innerHTML += '...But you won! Congratulations!'
     }
 }
 
@@ -82,14 +106,18 @@ const filteredCards = (targId) => {
         return el !== targId;
     });
 }
+
+// if (lockBoard === true) {
+//     return;
+// } THIS
+
 const putOutFire = (event) => {
     if (bucketsOfWater > 0) {
+        waterNotification('-1', event);
         const targId = Number(event.target.id);        
         event.target.parentNode.removeChild(event.target);
         burningCards = filteredCards(targId);
-        --bucketsOfWater;
-        displayBuckets();
-        oddsOfFire = 0;
+        oddsOfFire = oddsOfFire === 0 ? 0 : oddsOfFire -= 1;
     }    
 }
 
@@ -108,9 +136,7 @@ let oddsOfFire = 0;
 function burn(event) {
     if (Math.floor((Math.random() * 10) + 1) < oddsOfFire && matchedIds.length < (cardsInPlay.length) - 3) {
         document.querySelector('#but').classList.remove('invisible');
-        setTimeout(() => {
-            displayBuckets();
-        }, 1000);
+        document.querySelector('#but').classList.add('fade-in');
         const num = getUnburntCard(event);
         const burningCard = document.querySelectorAll('.card')[num];
         const flame = document.createElement('img');
@@ -119,20 +145,22 @@ function burn(event) {
         flame.setAttribute('id', num);
         flame.addEventListener('click', putOutFire);
         burningCard.parentNode.append(flame);
+        console.log('parent: ', burningCard.parentNode.childNodes);
         burningCards.push(Number(burningCard.id));
         oddsOfFire -= 2;
         
         if (burningCards.length > document.querySelectorAll('.visible').length / 2) {
             document.querySelector('#app').innerHTML = '';
-            document.querySelector('#but').innerHTML += '<br><br><br><br><br><br><h2>...And that killed you</h2>';
+            document.querySelector('#end').classList.add('fade-in');
+            document.querySelector('#end').innerHTML += '...And that killed you';
         }
     } else {
         oddsOfFire++;
     }
 }
 
-let lockBoard = false;
-function flipCard() {
+
+function flipCard(e) {
     if (lockBoard === true) {
         return;
     }
@@ -144,7 +172,7 @@ function flipCard() {
             lockBoard = true;
             setTimeout(() => {
                 lockBoard = false;
-                checkMatch();
+                checkMatch(e);
             }, 500);
         }
     }
