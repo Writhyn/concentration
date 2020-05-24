@@ -1,9 +1,5 @@
 import cardList from './components/cardList.js';
 
-// figure out why buckets updating is intermittent
-// Update: the emptying of burning cards array in the hydrant condition is causing it
-
-
 let cardsInPlay = [];
 cardList.map(el => {
     cardsInPlay.push(el);
@@ -49,33 +45,26 @@ const displayBuckets = (num) => {
 
 const waterNotification = (num, e) => {
     const targ = e.target;
-    const note = document.createElement('h1');
-    note.innerHTML = `${num}<br>Water!`;
+    const note = document.createElement('div');
+    const text = document.createElement('p');
+    text.innerHTML = `${num}<br>Water!`;
+    note.append(text);
     note.setAttribute('class', targ.src.indexOf('fire') > -1 ? 'water-red' : 'water-blue');
-    if (targ.src.indexOf('fire') > -1) {
-        const img = targ.parentNode.childNodes[0];
-        img.classList.add('faded');
-        setTimeout(() => {
-            img.classList.remove('faded');
-        }, 1000)
-    }
     targ.parentNode.append(note);
     note.classList.add('water-notification');
+    displayBuckets(Number(num));
     setTimeout(() => {
         note.parentNode.removeChild(note);
-        displayBuckets(Number(num));
     }, 1000);
 }
 
 let matchedIds = [];
 const checkMatch = (e) => {
     if (chosenCards[0].name === chosenCards[1].name) {
-        chosenCards[0].classList.remove('visible');
-        chosenCards[1].classList.remove('visible');
-        matchedIds.push(Number(chosenCards[0].id));
-        matchedIds.push(Number(chosenCards[1].id));
+        chosenCards.map(el => el.classList.remove('visible'));
+        chosenCards.map(el => el.classList.add('swirl-out-bck'));
+        chosenCards.map(el => matchedIds.push(Number(el.id)));
         if (chosenCards[0].name === 'hydrant') {
-            console.log('hydrant');
             waterNotification('+3', e);
             Array.prototype.map.call(document.querySelectorAll('img'), el => {
                 if (el.src.includes('fire')) {
@@ -87,16 +76,15 @@ const checkMatch = (e) => {
             waterNotification('+1', e);
         }
     } else {
-        chosenCards[0].setAttribute('src', 'images/card-back.png');
-        chosenCards[1].setAttribute('src', 'images/card-back.png');
-        chosenCards[0].classList.remove('selected');
-        chosenCards[1].classList.remove('selected');
+        chosenCards.map(el => el.setAttribute('src', 'images/card-back.png'));
+        chosenCards.map(el => el.classList.remove('selected'));
     }
     chosenCards = [];
     if (matchedIds.length === 30) {
         document.querySelector('#app').innerHTML = '';
         document.querySelector('#end').classList.add('fade-in');
-        document.querySelector('#end').innerHTML += '...But you won! Congratulations!'
+        document.querySelector('#buckets').classList.add('invisible');
+        document.querySelector('#end').innerHTML += '<br>...But you won! Congratulations!';
     }
 }
 
@@ -129,6 +117,7 @@ const getUnburntCard = (event) => {
     }
     return num;
 }
+
 let oddsOfFire = 0;
 function burn(event) {
     if (Math.floor((Math.random() * 10) + 1) < oddsOfFire && matchedIds.length < (cardsInPlay.length) - 3) {
@@ -142,14 +131,12 @@ function burn(event) {
         flame.setAttribute('id', num);
         flame.addEventListener('click', putOutFire);
         burningCard.parentNode.append(flame);
-        console.log('parent: ', burningCard.parentNode.childNodes);
         burningCards.push(Number(burningCard.id));
         oddsOfFire -= 2;
-        
         if (burningCards.length > document.querySelectorAll('.visible').length / 2) {
             document.querySelector('#app').innerHTML = '';
             document.querySelector('#end').classList.add('fade-in');
-            document.querySelector('#end').innerHTML += '...And that killed you';
+            document.querySelector('#end').innerHTML += '<br>...And that killed you';
         }
     } else {
         oddsOfFire++;
