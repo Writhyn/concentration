@@ -145,19 +145,36 @@ const getUnburntCard = (event) => {
     return num;
 }
 
-let oddsOfFire = -2;
+let oddsOfFire = 5;
 function burn(event) {
-    if (Math.floor((Math.random() * 10) + 1) < oddsOfFire && matchedIds.length < (cardsInPlay.length) - 3) {
+    const targetCards = document.querySelectorAll('.card');
+
+    const unfortunateName = event.target.name;
+    const unfortunateId = event.target.id;
+    let unfortunateTarget = 0;
+    targetCards.forEach(el => {
+        if (el.name === unfortunateName && el.id !== unfortunateId) {
+            unfortunateTarget = Number(el.id);
+        }
+    })
+
+    const randNum = Math.floor((Math.random() * 10) + 1);
+    console.log(randNum, unfortunateName, unfortunateId, unfortunateTarget);
+    if (randNum < oddsOfFire && matchedIds.length < (cardsInPlay.length) - 2) {
         document.querySelector('#but').classList.remove('invisible');
         document.querySelector('#but').classList.add('fade-in');
         const num = getUnburntCard(event);
-        const burningCard = document.querySelectorAll('.card')[num];
+        const burningCard = targetCards[num];
         const flame = document.createElement('img');
         flame.setAttribute('src', 'images/fire.png');
         flame.setAttribute('class', 'fire');
         flame.setAttribute('id', num);
         flame.addEventListener('click', putOutFire);
-        burningCard.parentNode.append(flame);
+        if (randNum === 1 && burningCards.indexOf(unfortunateTarget) === -1) {
+            targetCards[unfortunateTarget].parentNode.append(flame);
+        } else {
+            burningCard.parentNode.append(flame);
+        }
         flame.classList.add('puff-in-center');
         setTimeout(() => {
             flame.classList.remove('puff-in-center');
