@@ -233,7 +233,9 @@ function flipCard(e) {
         this.classList.add('selected');
         this.setAttribute('src', this.dataset.img);
         chosenCards.push(this);
-        burn(e);
+        if (burningCards.length !== document.querySelectorAll('.visible').length - 2) {
+            burn(e);
+        }
         if (chosenCards.length === 2) {
             lockBoard = true;
             setTimeout(() => {
