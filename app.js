@@ -123,11 +123,11 @@ const putOutFire = (event) => {
         waterNotification('-1', event);
         const targId = Number(event.target.id);  
         burningCards = burningCards.filter(el => {
-                return el !== targId;
-            });
-        }
+            return el !== targId;
+        });
         event.target.parentNode.removeChild(event.target);
     }
+}
 
 const getUnburntCard = (event) => {
     const num = Math.floor(Math.random() * (cardsInPlay.length));
