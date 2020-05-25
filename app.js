@@ -159,7 +159,6 @@ function burn(event) {
     })
 
     const randNum = Math.floor((Math.random() * 10) + 1);
-    console.log(randNum, unfortunateName, unfortunateId, unfortunateTarget);
     if (randNum < oddsOfFire && matchedIds.length < (cardsInPlay.length) - 2) {
         document.querySelector('#but').classList.remove('invisible');
         document.querySelector('#but').classList.add('fade-in');
@@ -172,14 +171,15 @@ function burn(event) {
         flame.addEventListener('click', putOutFire);
         if (randNum === 1 && burningCards.indexOf(unfortunateTarget) === -1) {
             targetCards[unfortunateTarget].parentNode.append(flame);
+            burningCards.push(Number(unfortunateId))
         } else {
             burningCard.parentNode.append(flame);
+            burningCards.push(Number(burningCard.id));
         }
         flame.classList.add('puff-in-center');
         setTimeout(() => {
             flame.classList.remove('puff-in-center');
         }, 700)
-        burningCards.push(Number(burningCard.id));
         oddsOfFire -= 2;
         if (burningCards.length > document.querySelectorAll('.visible').length / 2) {
             gameEnd(false, burningCard);
