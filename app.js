@@ -145,7 +145,7 @@ const getUnburntCard = (event) => {
     return num;
 }
 
-let oddsOfFire = 5;
+let oddsOfFire = -1;
 function burn(event) {
     const targetCards = document.querySelectorAll('.card');
 
