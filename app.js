@@ -151,7 +151,7 @@ function burn(event) {
 
     const unfortunateName = event.target.name;
     const unfortunateId = event.target.id;
-    let unfortunateTarget = 0;
+    let unfortunateTarget = -1;
     targetCards.forEach(el => {
         if (el.name === unfortunateName && el.id !== unfortunateId) {
             unfortunateTarget = Number(el.id);
@@ -169,7 +169,10 @@ function burn(event) {
         flame.setAttribute('class', 'fire');
         flame.setAttribute('id', num);
         flame.addEventListener('click', putOutFire);
-        if (randNum === 1 && burningCards.indexOf(unfortunateTarget) === -1) {
+        if (randNum === 1 && burningCards.indexOf(unfortunateTarget) === -1 && Number(chosenCards[0].id) !== unfortunateTarget) {
+            console.log(unfortunateTarget);
+            
+            console.log(chosenCards[0]);
             targetCards[unfortunateTarget].parentNode.append(flame);
             burningCards.push(Number(unfortunateId))
         } else {
