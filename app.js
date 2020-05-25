@@ -130,7 +130,6 @@ const putOutFire = (event) => {
         const targId = Number(event.target.id);        
         event.target.parentNode.removeChild(event.target);
         burningCards = filteredCards(targId);
-        oddsOfFire = oddsOfFire === 0 ? 0 : oddsOfFire -= 1;
     }    
 }
 
