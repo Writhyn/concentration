@@ -62,7 +62,7 @@ const checkWinnable = () => {
     const check = matches.map(el => {
         return !burningCards.includes(el[0]) && !burningCards.includes(el[1]) && !matchedIds.includes(el[0]);
     })
-    if (!check.includes(true) && bucketsOfWater === 0 || burningCards.length > document.querySelectorAll('.visible').length - 3) {
+    if (!check.includes(true) && bucketsOfWater === 0 || burningCards.length > document.querySelectorAll('.visible').length * 0.75) {
         return false;
     }
     return true;
@@ -217,7 +217,7 @@ function burn(event) {
         //     gameEnd(false, burningCard);
         // }
         if (checkWinnable() === false) {
-            gameEnd(false, burningCard);
+            gameEnd(false, burningCard); 
         }
     } else {
         oddsOfFire++;
