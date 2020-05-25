@@ -36,7 +36,7 @@ const createGrid = () => {
 
 let lockBoard = false;
 
-let bucketsOfWater = 0;
+let bucketsOfWater = 10;
 const displayBuckets = (num) => {
     bucketsOfWater += num;
     if (burningCards.length > 0) {
@@ -92,11 +92,11 @@ const gameEnd = (win, blobOrigin) => {
 let matchedIds = [];
 const checkMatch = (e) => {
     if (chosenCards[0].name === chosenCards[1].name) {
+        waterNotification('+1', e);
         chosenCards.map(el => el.classList.remove('visible'));
         chosenCards.map(el => el.classList.add('swirl-out-bck'));
         chosenCards.map(el => matchedIds.push(Number(el.id)));
         oddsOfFire -= 1;
-        waterNotification('+1', e);
         if (chosenCards[0].name === 'hydrant') {
             Array.prototype.map.call(document.querySelectorAll('img'), el => {
                 if (el.src.includes('fire')) {
@@ -118,20 +118,16 @@ const checkMatch = (e) => {
 
 let burningCards = [];
 
-const filteredCards = (targId) => {
-    return burningCards.filter(el => {
-        return el !== targId;
-    });
-}
-
 const putOutFire = (event) => {
     if (bucketsOfWater > 0) {
         waterNotification('-1', event);
-        const targId = Number(event.target.id);        
+        const targId = Number(event.target.id);  
+        burningCards = burningCards.filter(el => {
+                return el !== targId;
+            });
+        }
         event.target.parentNode.removeChild(event.target);
-        burningCards = filteredCards(targId);
-    }    
-}
+    }
 
 const getUnburntCard = (event) => {
     const num = Math.floor(Math.random() * (cardsInPlay.length));
@@ -167,18 +163,16 @@ function burn(event) {
         const flame = document.createElement('img');
         flame.setAttribute('src', 'images/fire.png');
         flame.setAttribute('class', 'fire');
-        flame.setAttribute('id', num);
+        
         flame.addEventListener('click', putOutFire);
         if (randNum === 1 && burningCards.indexOf(unfortunateTarget) === -1 && Number(chosenCards[0].id) !== unfortunateTarget) {
-            console.log(unfortunateTarget);
-            console.log(chosenCards[0]);
+            flame.setAttribute('id', unfortunateTarget);
             targetCards[unfortunateTarget].parentNode.append(flame);
             burningCards.push(Number(unfortunateTarget));
-            console.log(burningCards);
         } else {
+            flame.setAttribute('id', num);
             burningCard.parentNode.append(flame);
             burningCards.push(Number(burningCard.id));
-            console.log(burningCards);
         }
         flame.classList.add('puff-in-center');
         setTimeout(() => {
