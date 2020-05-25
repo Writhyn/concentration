@@ -34,6 +34,40 @@ const createGrid = () => {
     })
 }
 
+let matches = [];
+setTimeout(() => {
+    let matchesTemp = [];
+    const testCards = document.querySelectorAll('.card');
+    testCards.forEach(el => {
+        const arr = [];
+        let sister = -1;
+        testCards.forEach(em => {
+            if (em.name === el.name && em.id !== el.id) {
+                sister = em.id;
+            } 
+        })
+        arr.push(Number(el.id));
+        arr.push(Number(sister));
+        arr.sort((a, b) => a - b);
+        if (!matchesTemp.includes(arr[0])) {
+            matchesTemp.push(...arr);
+        }
+    })
+    while (matchesTemp.length > 0) {
+        matches.push(matchesTemp.splice(0, 2));
+    }
+}, 10)
+
+const checkWinnable = () => {
+    const check = matches.map(el => {
+        return !burningCards.includes(el[0]) && !burningCards.includes(el[1]) && !matchedIds.includes(el[0]);
+    })
+    if (!check.includes(true) && bucketsOfWater === 0 || burningCards.length > document.querySelectorAll('.visible').length - 3) {
+        return false;
+    }
+    return true;
+}
+
 let lockBoard = false;
 
 let bucketsOfWater = 0;
@@ -179,12 +213,14 @@ function burn(event) {
             flame.classList.remove('puff-in-center');
         }, 700)
         oddsOfFire -= 2;
-        if (burningCards.length > document.querySelectorAll('.visible').length / 2) {
+        // if (burningCards.length > document.querySelectorAll('.visible').length / 2) {
+        //     gameEnd(false, burningCard);
+        // }
+        if (checkWinnable() === false) {
             gameEnd(false, burningCard);
         }
     } else {
         oddsOfFire++;
-    
     }
 }
 
