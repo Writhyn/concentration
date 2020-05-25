@@ -171,13 +171,14 @@ function burn(event) {
         flame.addEventListener('click', putOutFire);
         if (randNum === 1 && burningCards.indexOf(unfortunateTarget) === -1 && Number(chosenCards[0].id) !== unfortunateTarget) {
             console.log(unfortunateTarget);
-            
             console.log(chosenCards[0]);
             targetCards[unfortunateTarget].parentNode.append(flame);
-            burningCards.push(Number(unfortunateId))
+            burningCards.push(Number(unfortunateTarget));
+            console.log(burningCards);
         } else {
             burningCard.parentNode.append(flame);
             burningCards.push(Number(burningCard.id));
+            console.log(burningCards);
         }
         flame.classList.add('puff-in-center');
         setTimeout(() => {
