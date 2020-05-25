@@ -36,7 +36,7 @@ const createGrid = () => {
 
 let lockBoard = false;
 
-let bucketsOfWater = 10;
+let bucketsOfWater = 0;
 const displayBuckets = (num) => {
     bucketsOfWater += num;
     if (burningCards.length > 0) {
