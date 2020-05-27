@@ -1,4 +1,51 @@
+const newCards = [
+    {
+        name: 'himeji',
+        img: 'images/himeji.png'
+    },
+    {
+        name: 'pisa',
+        img: 'images/pisa.png'
+    },
+    {
+        name: 'sydney',
+        img: 'images/sydney.png'
+    },
+    {
+        name: 'taj',
+        img: 'images/taj.png'
+    },
+    {
+        name: 'torii',
+        img: 'images/torii.png'
+    },
+    {
+        name: 'extinguish',
+        img: 'images/extinguish.png'
+    }
+]
+
 const cardList = [
+    {
+        name: 'himeji',
+        img: 'images/himeji.png'
+    },
+    {
+        name: 'pisa',
+        img: 'images/pisa.png'
+    },
+    {
+        name: 'sydney',
+        img: 'images/sydney.png'
+    },
+    {
+        name: 'taj',
+        img: 'images/taj.png'
+    },
+    {
+        name: 'torii',
+        img: 'images/torii.png'
+    },
     {
         name: 'arc',
         img: 'images/arc.png'
