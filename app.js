@@ -12,9 +12,10 @@ cardsInPlay = cardsInPlay
 
 let chosenCards = [];
 
-const grid = document.querySelector('#app');
+
 
 const createGrid = () => {
+    const grid = document.querySelector('#app');
     cardsInPlay.map((el, i) => {
         const cardCont = document.createElement('div');
         cardCont.setAttribute('class', 'flex');
@@ -62,7 +63,7 @@ const checkWinnable = () => {
     const check = matches.map(el => {
         return !burningCards.includes(el[0]) && !burningCards.includes(el[1]) && !matchedIds.includes(el[0]);
     })
-    if (!check.includes(true) && bucketsOfWater === 0 || burningCards.length > document.querySelectorAll('.visible').length * 0.75) {
+    if (!check.includes(true) && bucketsOfWater === 0 || burningCards.length >= document.querySelectorAll('.visible').length * 0.75) {
         return false;
     }
     return true;
@@ -226,6 +227,8 @@ function burn(event) {
 
 
 function flipCard(e) {
+    console.log(oddsOfFire);
+    
     if (lockBoard === true) {
         return;
     }

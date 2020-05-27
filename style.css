@@ -63,7 +63,8 @@ h2 {
 
 #app {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  
+  grid: repeat(6, 1fr) / repeat(5, 1fr);
   gap: 15px;
 }
 
