@@ -212,7 +212,7 @@ function burn(event) {
         setTimeout(() => {
             flame.classList.remove('puff-in-center');
         }, 700)
-        oddsOfFire -= 2;
+        oddsOfFire -= 1;
         // if (burningCards.length > document.querySelectorAll('.visible').length / 2) {
         //     gameEnd(false, burningCard);
         // }
