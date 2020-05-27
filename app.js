@@ -145,7 +145,7 @@ const checkMatch = (e) => {
         chosenCards.map(el => el.classList.remove('selected'));
     }
     chosenCards = [];
-    if (matchedIds.length === 30) {
+    if (matchedIds.length === cardsInPlay.length) {
         gameEnd(true, e.target);
     }
 }
