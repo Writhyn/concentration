@@ -133,7 +133,6 @@ const checkMatch = (e) => {
         chosenCards.map(el => el.classList.remove('visible'));
         chosenCards.map(el => el.classList.add('swirl-out-bck'));
         chosenCards.map(el => matchedIds.push(Number(el.id)));
-        oddsOfFire -= 1;
         if (chosenCards[0].name === 'hydrant') {
             Array.prototype.map.call(document.querySelectorAll('img'), el => {
                 if (el.src.includes('fire')) {
@@ -141,7 +140,6 @@ const checkMatch = (e) => {
                 }
             });
             burningCards = [];
-            oddsOfFire = 0;
         }
     } else {
         chosenCards.map(el => el.setAttribute('src', 'images/card-back.png'));
@@ -178,7 +176,27 @@ const getUnburntCard = (event) => {
     return num;
 }
 
-let oddsOfFire = -1;
+const spread = () => {
+    const fires = document.querySelectorAll('.fire');
+    const arr = [];
+    fires.forEach(el => {
+        if (el.dataset.spread == 0) {
+            const flame = document.createElement('img');
+            flame.setAttribute('src', 'images/fire.png');
+            flame.setAttribute('class', 'fire');
+            flame.setAttribute('data-spread', 10);
+            flame.addEventListener('click', putOutFire);
+            flame.setAttribute('id', num);
+            burningCard.parentNode.append(flame);
+            burningCards.push(Number(burningCard.id));
+        }
+        el.dataset.spread -= 1;
+    })
+
+    console.log(arr);
+    
+}
+
 function burn(event) {
     const targetCards = document.querySelectorAll('.card');
 
@@ -191,8 +209,9 @@ function burn(event) {
         }
     })
 
-    const randNum = Math.floor((Math.random() * 10) + 1);
-    if (randNum < oddsOfFire && matchedIds.length < (cardsInPlay.length) - 2) {
+    const randNum = Math.floor((Math.random() * 20) + 1);
+
+    if (randNum <= 5 && matchedIds.length < (cardsInPlay.length) - 2) {
         document.querySelector('#but').classList.remove('invisible');
         document.querySelector('#but').classList.add('fade-in');
         const num = getUnburntCard(event);
@@ -200,7 +219,7 @@ function burn(event) {
         const flame = document.createElement('img');
         flame.setAttribute('src', 'images/fire.png');
         flame.setAttribute('class', 'fire');
-        
+        flame.setAttribute('data-spread', 10);
         flame.addEventListener('click', putOutFire);
         if (randNum === 1 && burningCards.indexOf(unfortunateTarget) === -1 && Number(chosenCards[0].id) !== unfortunateTarget) {
             flame.setAttribute('id', unfortunateTarget);
@@ -215,22 +234,17 @@ function burn(event) {
         setTimeout(() => {
             flame.classList.remove('puff-in-center');
         }, 700)
-        oddsOfFire -= 1;
         // if (burningCards.length > document.querySelectorAll('.visible').length / 2) {
         //     gameEnd(false, burningCard);
         // }
         if (checkWinnable() === false) {
             gameEnd(false, burningCard); 
         }
-    } else {
-        oddsOfFire++;
     }
 }
 
 
 function flipCard(e) {
-    console.log(document.querySelectorAll('.visible').length);
-    
     if (lockBoard === true) {
         return;
     }
@@ -240,6 +254,7 @@ function flipCard(e) {
         chosenCards.push(this);
         if (burningCards.length !== document.querySelectorAll('.visible').length - 2) {
             burn(e);
+            spread();
         }
         if (chosenCards.length === 2) {
             lockBoard = true;
@@ -248,6 +263,7 @@ function flipCard(e) {
                 checkMatch(e);
             }, 500);
         }
+        
     }
     
 }
