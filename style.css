@@ -160,6 +160,15 @@ h2 {
     animation: pulsate-bck 1s ease-in-out infinite both;
 }
 
+.thunder-head {
+  z-index: 20;
+  position: absolute;
+  pointer-events: none;
+  height: auto;
+  width: 75%;
+  transition: all 0.5s ease;
+}
+
 .puff-in-center {
 	animation: puff-in-center 0.5s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
 }

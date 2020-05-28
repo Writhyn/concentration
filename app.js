@@ -226,10 +226,39 @@ function burn(event) {
     }
 }
 
+// let stormy = 0;
+// const storm = (event) => {
+//     const randNum = Math.floor(Math.random() * 10);
+//     if (randNum === 0 && stormy === 0) {
+//         const targ = event.target.parentNode;
+//         const thunderHead = document.createElement('img');
+//         thunderHead.setAttribute('src', 'images/storm.png');
+//         thunderHead.setAttribute('class', 'thunder-head');    
+//         targ.append(thunderHead);
+//         thunderHead.classList.add('fade-in');
+//         console.log('here');
+        
+//         stormy = 5;
+//     } else if (stormy > 1) {
+//         stormy -= 1;
+//     } else if (stormy === 1) {
+//         const dissipate = document.querySelector('.thunder-head');
+//         dissipate.parentNode.removeChild(dissipate);
+//         stormy = 0;
+//     }
+// }
+
+// let oiledUp = [];
+// const oilSpill = () => {
+
+// }
+
 function flipCard(e) {
     if (lockBoard === true) {
         return;
     }
+    // oilSpill();
+    // storm(e);
     if (this.getAttribute('src') === 'images/card-back.png' && !burningCards.includes(Number(this.id))) {
         this.classList.add('selected');
         this.setAttribute('src', this.dataset.img);
