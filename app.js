@@ -34,6 +34,8 @@ const createGrid = () => {
     })
 }
 
+createGrid();
+
 let matches = [];
 setTimeout(() => {
     let matchesTemp = [];
@@ -62,7 +64,7 @@ const checkWinnable = () => {
     const check = matches.map(el => {
         return !burningCards.includes(el[0]) && !burningCards.includes(el[1]) && !matchedIds.includes(el[0]);
     })
-    if (!check.includes(true) && bucketsOfWater === 0 || burningCards.length > document.querySelectorAll('.visible').length * 0.75) {
+    if (!check.includes(true) && bucketsOfWater === 0 || burningCards.length >= document.querySelectorAll('.visible').length * 0.75) {
         return false;
     }
     return true;
@@ -175,7 +177,7 @@ const getUnburntCard = (event) => {
     return num;
 }
 
-let oddsOfFire = -1;
+let oddsOfFire = -3;
 function burn(event) {
     const targetCards = document.querySelectorAll('.card');
 
@@ -224,7 +226,6 @@ function burn(event) {
     }
 }
 
-
 function flipCard(e) {
     if (lockBoard === true) {
         return;
@@ -246,5 +247,3 @@ function flipCard(e) {
     }
     
 }
-
-createGrid();
