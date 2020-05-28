@@ -35,6 +35,8 @@ const createGrid = () => {
     })
 }
 
+createGrid();
+
 let matches = [];
 setTimeout(() => {
     let matchesTemp = [];
@@ -146,7 +148,7 @@ const checkMatch = (e) => {
         chosenCards.map(el => el.classList.remove('selected'));
     }
     chosenCards = [];
-    if (matchedIds.length === 30) {
+    if (matchedIds.length === cardsInPlay.length) {
         gameEnd(true, e.target);
     }
 }
@@ -227,7 +229,7 @@ function burn(event) {
 
 
 function flipCard(e) {
-    console.log(oddsOfFire);
+    console.log(document.querySelectorAll('.visible').length);
     
     if (lockBoard === true) {
         return;
@@ -249,5 +251,3 @@ function flipCard(e) {
     }
     
 }
-
-createGrid();
